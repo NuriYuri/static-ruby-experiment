@@ -1,4 +1,5 @@
 cd int/LiteRGSS
+CPP_FILES=$(ruby -C$LITE_RGSS_DIR/ext/LiteRGSS -e'puts (Dir["*.cpp"] + Dir["*.c"]).join(" ")')
 
 for file in $CPP_FILES; do
 g++ -c $LITE_RGSS_DIR/ext/LiteRGSS/$file \

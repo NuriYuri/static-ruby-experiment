@@ -38,6 +38,14 @@ This project has a little structure that make it possible.
 
 Note: I need to optimize the configure command, it's missing few things.
 
+## How to statically build SFML
+
+1. Go to SFML directory
+2. Run `cmake . -DBUILD_SHARED_LIBS=false -DSFML_OS_MACOSX=true`
+3. Run `make sfml-system`
+3. Run `make sfml-window`
+3. Run `make sfml-graphics`
+
 ## How to use the build scripts
 
 1. Make sure you did compile ruby
@@ -52,7 +60,7 @@ Note: I need to optimize the configure command, it's missing few things.
 ## TODOs
 
 - [x] Improve the build script
-- [ ] Build SFML in static mode and use that folder as source
+- [x] Build SFML in static mode and use that folder as source
 - [ ] Make a good enough static binary to be able to run a `PSDK` game
 - [ ] Figure out how to get rid of external Ruby scripts
 - [ ] Remove all sort of OS write interactions from Ruby (aside socket)
