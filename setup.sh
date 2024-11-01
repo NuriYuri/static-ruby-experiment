@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Ruby version
+RUBY_MAJOR_MINOR=3.3
+
+# Descriptor of the platform (for ruby config)
+PLATFORM_STRING=arm64-darwin24
+
+# Directories to dependencies needed to build extensions
+export SFML_DIR=/opt/homebrew/Cellar/sfml/2.6.1
+export FMOD_DIR=/opt/homebrew
+export RUBY_INCLUDE_DIR=/Volumes/ssd/tests/ruby-3.3.5/build/install/usr/local/include/ruby-$RUBY_MAJOR_MINOR.0
+
+# Directories to extensions to re-build
+export LITE_RGSS_DIR=/Volumes/ssd/projects/litergss2
+export RUBY_FMOD_DIR=/Volumes/ssd/projects/Ruby-Fmod
+
+# Directories to external dependencies of extensions
+export LITE_CGSS_DIR=$LITE_RGSS_DIR/external/litecgss
+export SKA_LOG_DIR=$LITE_CGSS_DIR/external/skalog
+
+# Expected std lib for g++
+export WITH_CPP_STD_LIB="-std=c++17"
+
+# Shortcut to add all ruby include dir for gcc
+export WITH_RUBY_INCLUDES="-I$RUBY_INCLUDE_DIR -I$RUBY_INCLUDE_DIR/$PLATFORM_STRING"
+# Shortcut to add all the ruby library
+export WITH_RUBY_LIBRARY="-Llibs -lruby.$RUBY_MAJOR_MINOR-static -lsocket"
+
+# Shortcut to add all the FMOD include dir for gcc
+export WITH_FMOD_INCLUDES="-I$FMOD_DIR/include"
+# Shortcut to add the FMOD library
+export WITH_FMOD_LIBRARY="-L$FMOD_DIR/lib -lRubyFmod -lfmod"
+
+# Shortcut to add all the LiteRGSS related include for gcc
+export WITH_LITERGSS_INCLUDES="-I$SFML_DIR/include -I$LITE_RGSS_DIR/ext/LiteRGSS -I$LITE_CGSS_DIR/src/src -I$SKA_LOG_DIR/src/src"
+# Shortcut to add all the LiteRGSS related libraries
+export WITH_LITERGSS_LIBRARY="-L$LITE_CGSS_DIR/lib -L$SFML_DIR/lib -lLiteRGSS -lLiteCGSS_engine -lskalog -lsfml-graphics -lsfml-system -lsfml-window"

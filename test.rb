@@ -12,7 +12,7 @@ def play_music(path)
 end
 
 def win_main
-  window = LiteRGSS::DisplayWindow.new('Test Static', 320, 240, 2, 32, 0, true, false, false)
+  window = LiteRGSS::DisplayWindow.new('Test Static', 320, 240, 2, 32, 0, true, false, true)
   window.on_lost_focus = proc { $channel&.setVolume(0.5) }
   window.on_gained_focus = proc { $channel&.setVolume(1.0) }
   window.on_closed = proc { window = nil; true }

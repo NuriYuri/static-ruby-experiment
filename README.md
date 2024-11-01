@@ -38,9 +38,20 @@ This project has a little structure that make it possible.
 
 Note: I need to optimize the configure command, it's missing few things.
 
+## How to use the build scripts
+
+1. Make sure you did compile ruby
+2. Make sure you did compile litergss2 in release mode (so `libLiteCGSS_engine` and `libskalog` are built)
+3. Make sure you did copy the necessary library files to `libs`
+4. Edit `setup.sh` to fix the paths based on your own setup
+5. Run `source setup.sh`
+6. Run `./buildLiteRGSS.sh`
+7. Run `./buildRubyFmod.sh`
+8. Run `./build.sh`
+
 ## TODOs
 
-- [ ] Improve the build script
+- [x] Improve the build script
 - [ ] Build SFML in static mode and use that folder as source
 - [ ] Make a good enough static binary to be able to run a `PSDK` game
 - [ ] Figure out how to get rid of external Ruby scripts
