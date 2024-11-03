@@ -3,3 +3,5 @@
 *.dylib
 testRuby
 main.h
+*.pem
+*.sig
