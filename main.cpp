@@ -30,10 +30,24 @@ extern "C" {
 
 #include "main.h"
 
+// extern "C" void* rbMethodCPtr(VALUE klass, ID method);
+// typedef VALUE (*IO_binread)(int argc, VALUE *argv, VALUE io);
+
 VALUE loadAllExtensions(VALUE self) {
   load_ruby_extension();
   Init_LiteRGSS();
   Init_RubyFmod();
+  // VALUE singletonDir = rb_singleton_class(rb_cIO);
+  // void* entry = rbMethodCPtr(singletonDir, rb_intern("binread"));
+  // if (entry) {
+  //   printf("entry: %#lx\n", (unsigned long)entry);
+  //   IO_binread fn = (IO_binread)entry;
+  //   VALUE file = rb_str_new2("test.rb");
+  //   VALUE test = fn(1, &file, rb_cIO);
+  //   return test;
+  // } else {
+  //   printf("No entry\n");
+  // }
   return self;
 }
 

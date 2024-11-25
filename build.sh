@@ -6,6 +6,7 @@ g++ main.cpp \
   -framework CoreFoundation \
   -all_load \
   -Wl,-rpath,. \
+  -lRbMethodCPtr \
   -o testRuby
 
 #  -Wl,-rpath,. \ fixes the @rpath issue introduced by FMOD
