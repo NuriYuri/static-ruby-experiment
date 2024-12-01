@@ -55,7 +55,7 @@ Note: I need to optimize the configure command, it's missing few things.
 - [x] Build SFML in static mode and use that folder as source
 - [x] Make a good enough static binary to be able to run a `PSDK` game
 - [x] Figure out how to get rid of external Ruby scripts
-- [ ] Remove all sort of OS write interactions from Ruby (aside socket)
+- [x] Remove all sort of OS write interactions from Ruby (aside socket)
 - [ ] Make it possible to load signed code
 - [ ] Remove the ability to load/eval ruby script
 - [ ] Make utility binaries to help in build process/debug process
