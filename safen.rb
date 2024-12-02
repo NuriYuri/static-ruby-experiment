@@ -6,6 +6,7 @@ pwd = Dir.pwd.freeze
 home = File.join(Dir.home, File.dirname(pwd)).freeze
 allowed_script_dir = ARGV.pop.freeze
 dotdot = '..'.freeze
+unix = '~'.freeze
 root1 = '/'.freeze
 root2 = ':'.freeze
 null = File::NULL.freeze
@@ -13,7 +14,7 @@ raise = Kernel.singleton_method(:raise).unbind
 se = SecurityError
 
 Kernel.define_singleton_method(: ) do |f|
-  raise.bind_call(Kernel, se) if include.bind_call(f, dotdot)
+  raise.bind_call(Kernel, se) if include.bind_call(f, dotdot) || include.bind_call(f, unix)
   if start_with.bind_call(f, root1) || include.bind_call(f, root2)
     unless start_with.bind_call(f, pwd) || start_with.bind_call(f, home) || start_with.bind_call(f, allowed_script_dir)
       puts("Attempted to access: #{f}")
@@ -467,7 +468,7 @@ module Kernel
   # undef String
   undef __callee__
   undef __dir__
-  undef __method__
+  # undef __method__
   undef abort
   undef at_exit
   undef autoload

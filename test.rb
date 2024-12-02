@@ -11,4 +11,4 @@ require_relative "safen"
 ARGV << 'debug' << 'skip_title'
 require "#{psdk_path}/scripts/ScriptLoad.rb"
 ScriptLoader.load_tool('GameLoader/Z_load_uncompiled')
-exit!(0) # For some reason ruby never exit once the game started
+# exit!(0) # Ruby does not exit because of: @mouse_fps_viewport not being freed and sf::Font::cleanup()
