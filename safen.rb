@@ -4,7 +4,7 @@ eql = String.public_instance_method(:==)
 load = Kernel.singleton_method(:load).unbind
 pwd = Dir.pwd.freeze
 home = File.join(Dir.home, File.dirname(pwd)).freeze
-allowed_script_dir = ARGV.pop.freeze
+allowed_script_dir = (ENV['PSDK_BINARY_PATH'] || pwd).dup.freeze
 dotdot = '..'.freeze
 unix = '~'.freeze
 root1 = '/'.freeze

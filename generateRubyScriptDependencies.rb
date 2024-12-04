@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 libraries_to_require = %w[socket digest digest/sha1 digest/sha2 digest/md5 openssl stringio io/nonblock io/wait date_core strscan json yaml matrix net/http csv]
+libraries_to_require << File.join(Dir.pwd, 'safen.rb')
 ruby_dir = ENV['RUBY_INSTALL_DIR']
 raise 'run "source setup.sh" before running this script' unless ruby_dir
 
@@ -37,7 +38,7 @@ end
 def write_ruby_accumulator
   return if @ruby_accumulator.empty?
 
-  fixed_data = @ruby_accumulator.gsub(/(^| )require( |_relative)/, '# \1')
+  fixed_data = @ruby_accumulator.gsub(/(^| )require( |_relative )/, '# \1')
   fixed_data << "\n$LOADED_FEATURES.concat(['#{@ruby_features.map { |v| "/internal/#{v}" }.join("','")}'])\n"
   path = "#{@ruby_index}.rb"
   bin = @get_iseq_binary.call(path, fixed_data)
@@ -92,6 +93,10 @@ extern "C" {
   #{@ruby_exports}
 }
 
+VALUE voidLoadAllExtensions(VALUE self) {
+  return self;
+}
+
 inline void loadScript(VALUE rb_cIseq, VALUE rb_mZlib, ID inflate, ID from_binary, ID eval, VALUE str) {
   VALUE inflated = rb_funcall(rb_mZlib, inflate, 1, str);
   VALUE iseq = rb_funcall(rb_cIseq, from_binary, 1, inflated);
@@ -113,6 +118,52 @@ static inline void load_ruby_extension() {
   Init_windows_1252();
   #{@ruby_loader}
 }
+
+// extern "C" void* rbMethodCPtr(VALUE klass, ID method);
+// typedef VALUE (*IO_binread)(int argc, VALUE *argv, VALUE io);
+
+VALUE loadAllExtensions(VALUE self) {
+  load_ruby_extension();
+  Init_LiteRGSS();
+  Init_RubyFmod();
+  // VALUE singletonDir = rb_singleton_class(rb_cIO);
+  // void* entry = rbMethodCPtr(singletonDir, rb_intern("binread"));
+  // if (entry) {
+  //   printf("entry: %#lx\\n", (unsigned long)entry);
+  //   IO_binread fn = (IO_binread)entry;
+  //   VALUE file = rb_str_new2("test.rb");
+  //   VALUE test = fn(1, &file, rb_cIO);
+  //   return test;
+  // } else {
+  //   printf("No entry\\n");
+  // }
+  rb_define_method(rb_mKernel, "load_extensions", voidLoadAllExtensions, 0);
+  return self;
+}
+
+struct Arguments {
+  int argc;
+  char **argv;
+};
+
+// Note: if Arguments.argv is not NULL, you have to free it
+const Arguments copyAndExtendArguments(int argc, char** argv) {
+  const int totalArgc = argc + 1;
+  const Arguments arguments = {
+    totalArgc,
+    (char**)malloc(sizeof(void*) * (totalArgc))
+  };
+
+  if (!arguments.argv) return arguments;
+
+  arguments.argv[0] = argv[0];
+  arguments.argv[1] = (char*)"--disable-gems";
+  for (int i = 1; i < argc; i++) {
+    arguments.argv[i+1] = argv[i];
+  }
+
+  return arguments;
+};
 #endif
 EOF
 File.write('main.h', output)

@@ -5,9 +5,9 @@ g++ main.cpp \
   $WITH_LITERGSS_INCLUDES $WITH_LITERGSS_LIBRARY \
   -framework CoreFoundation \
   -all_load \
-  -Wl,-rpath,. \
+  -Wl,-rpath,'@executable_path' \
   -lRbMethodCPtr \
   -o testRuby
 
-#  -Wl,-rpath,. \ fixes the @rpath issue introduced by FMOD
+#  -Wl,-rpath,@executable_path \ fixes the @rpath issue introduced by FMOD
 # -all_load \ fixes the 'NSInvalidArgumentException', reason: '-[SFOpenGLView enableKeyRepeat] issue
