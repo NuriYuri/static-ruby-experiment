@@ -45,7 +45,7 @@ def write_ruby_accumulator
   compressed = Zlib::Deflate.deflate(bin)
   size = compressed.bytesize
   puts "#{@ruby_features.join(",")} = #{@ruby_accumulator.bytesize} -> #{bin.bytesize} -> #{size}"
-  @ruby_loader << "const unsigned char str#{@ruby_index}[#{size}] = {#{compressed.each_byte.to_a.join(',')}};\nstr = rb_str_new((const char*)str#{@ruby_index}, #{size});\n#{@iseq_load}\n"
+  @ruby_loader << "const unsigned char str#{@ruby_index}[#{size}] = {#{compressed.each_byte.to_a.join(',')}};\nstr = rb_str_new_static((const char*)str#{@ruby_index}, #{size});\n#{@iseq_load}\n"
   @ruby_index += 1
   @ruby_accumulator.clear
   @ruby_features.clear
@@ -120,25 +120,11 @@ static inline void load_ruby_extension() {
   #{@ruby_loader}
 }
 
-// extern "C" void* rbMethodCPtr(VALUE klass, ID method);
-// typedef VALUE (*IO_binread)(int argc, VALUE *argv, VALUE io);
-
 VALUE loadAllExtensions(VALUE self) {
   load_ruby_extension();
   loadSignHelper();
   Init_LiteRGSS();
   Init_RubyFmod();
-  // VALUE singletonDir = rb_singleton_class(rb_cIO);
-  // void* entry = rbMethodCPtr(singletonDir, rb_intern("binread"));
-  // if (entry) {
-  //   printf("entry: %#lx\\n", (unsigned long)entry);
-  //   IO_binread fn = (IO_binread)entry;
-  //   VALUE file = rb_str_new2("test.rb");
-  //   VALUE test = fn(1, &file, rb_cIO);
-  //   return test;
-  // } else {
-  //   printf("No entry\\n");
-  // }
   rb_define_method(rb_mKernel, "load_extensions", voidLoadAllExtensions, 0);
   return self;
 }
