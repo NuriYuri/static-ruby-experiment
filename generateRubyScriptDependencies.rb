@@ -90,6 +90,7 @@ extern "C" {
   void Init_utf_16le();
   void Init_windows_1252();
   void Init_zlib();
+  void loadSignHelper();
   #{@ruby_exports}
 }
 
@@ -124,6 +125,7 @@ static inline void load_ruby_extension() {
 
 VALUE loadAllExtensions(VALUE self) {
   load_ruby_extension();
+  loadSignHelper();
   Init_LiteRGSS();
   Init_RubyFmod();
   // VALUE singletonDir = rb_singleton_class(rb_cIO);

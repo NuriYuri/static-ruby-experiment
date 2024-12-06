@@ -7,6 +7,7 @@ g++ main.cpp \
   -all_load \
   -Wl,-rpath,'@executable_path' \
   -lRbMethodCPtr \
+  -lSignHelper \
   -o testRuby
 
 #  -Wl,-rpath,@executable_path \ fixes the @rpath issue introduced by FMOD
