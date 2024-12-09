@@ -17,7 +17,7 @@ lp.sort! { |p| -p.bytesize }
 @ruby_features = ['zlib.so', 'LiteRGSS.so', 'RubyFmod.so']
 @ruby_exports = ''
 @ruby_loader = ''
-@iseq_load = "loadScript(rb_cIseq, rb_mZlib, inflate, from_binary, eval, str);"
+@iseq_load = "loadScript(str);"
 @get_iseq_binary = proc do |path, data|
   next IO.popen("#{ruby_dir}/bin/ruby -e'path=STDIN.gets.chomp;data=STDIN.read;STDOUT.write(RubyVM::InstructionSequence.compile(data, path, path, 1, {inline_const_cache: true,peephole_optimization: true,tailcall_optimization: false,specialized_instruction: true,operands_unification: true,instructions_unification: true,debug_level: 0}).to_binary)'", 'r+') do |f|
     f.puts(path)
@@ -73,17 +73,16 @@ out.each do |filename|
 end
 write_ruby_accumulator
 
+@public_code_certificate = File.binread('sign/pub.pem')
+
 output = <<-EOF
 #ifndef MAIN_H
 #define MAIN_H
 
 #include "ruby.h"
+#include "iseq.h"
 
 extern "C" {
-  static VALUE iseqw_s_load_from_binary(VALUE self, VALUE str);
-  static VALUE iseqw_eval(VALUE self);
-  static VALUE rb_deflate_s_deflate(int argc, VALUE *argv, VALUE klass);
-  VALUE rb_cISeq;
   void Init_encdb();
   void Init_transdb();
   void Init_utf_16be();
@@ -94,23 +93,24 @@ extern "C" {
   #{@ruby_exports}
 }
 
+extern "C" {
+  const char* signHelperPublicCodeCertificatePem = (char*)(char[#{@public_code_certificate.bytesize + 1}]){ #{@public_code_certificate.each_byte.to_a.join(',')}, 0 };
+}
+extern const size_t signHelperPublicCodeCertificateSize = #{@public_code_certificate.bytesize};
+
 VALUE voidLoadAllExtensions(VALUE self) {
   return self;
 }
 
-inline void loadScript(VALUE rb_cIseq, VALUE rb_mZlib, ID inflate, ID from_binary, ID eval, VALUE str) {
-  VALUE inflated = rb_funcall(rb_mZlib, inflate, 1, str);
-  VALUE iseq = rb_funcall(rb_cIseq, from_binary, 1, inflated);
-  rb_funcall(iseq, eval, 0);
+inline void loadScript(VALUE str) {
+  VALUE inflated = rb_inflate_s_inflate(rb_mZlib, str);
+  VALUE iseq = iseqw_s_load_from_binary(rb_cISeq, inflated);
+  iseqw_eval(iseq);
 }
 
 static inline void load_ruby_extension() {
   Init_zlib();
-  VALUE rb_cIseq = rb_const_get(rb_const_get(rb_cObject, rb_intern("RubyVM")), rb_intern("InstructionSequence"));
-  VALUE rb_mZlib = rb_const_get(rb_cObject, rb_intern("Zlib"));
-  ID inflate = rb_intern("inflate");
-  ID from_binary = rb_intern("load_from_binary");
-  ID eval = rb_intern("eval");
+  loadStaticRubyISEQ();
   VALUE str;
   Init_encdb();
   Init_transdb();

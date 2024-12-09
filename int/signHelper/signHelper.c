@@ -2,6 +2,9 @@
 // Examples:
 // ./testRuby -e'load_extensions;cert=File.read("sign/priv.pem");File.binwrite("signature", get_string_signature(File.binread("test.rb"), cert))'
 // ./testRuby -e'load_extensions;cert=File.read("sign/pub.pem");p verify_string(File.binread("test.rb"), File.binread("signature"), cert)'
+// ./testRuby -e'load_extensions;cert=File.read("sign/priv.pem");bin=Zlib.deflate(RubyVM::InstructionSequence.compile(File.binread("test.rb"), "test.rb", "test.rb").to_binary);signature=get_string_signature(bin, cert);load_signed_code(bin, signature)'
+
+#include "../../iseq.h"
 
 extern void* rbMethodCPtr(VALUE klass, ID method);
 
@@ -13,14 +16,19 @@ MIN_1_ARGS ossl_pkey_verify;
 MIN_1_ARGS ossl_pkey_sign;
 VALUE rb_cOsslDigest;
 VALUE rb_cOsslPkeyRSA;
+VALUE publicCodeCertificate;
+extern const char* signHelperPublicCodeCertificatePem;
+extern const size_t signHelperPublicCodeCertificateSize;
 
 #define SIG_HELP_DIGEST "sha512"
 #define SIG_HELP_DIGEST_LEN sizeof(SIG_HELP_DIGEST)-1
 
-VALUE rb_get_string_signature(int argc, VALUE *argv, VALUE self);
-VALUE rb_verify_string(int argc, VALUE *argv, VALUE self);
+VALUE rb_get_string_signature(int argc, const VALUE *argv, VALUE self);
+VALUE rb_verify_string(int argc, const VALUE *argv, VALUE self);
+VALUE rb_load_signed_code(VALUE self, VALUE code, VALUE signature);
 
 void loadSignHelper() {
+  loadStaticRubyISEQ();
   const VALUE openSSL = rb_const_get(rb_cObject, rb_intern("OpenSSL"));
   rb_cOsslDigest = rb_const_get(openSSL, rb_intern("Digest"));
   ID PKey = rb_intern("PKey");
@@ -34,9 +42,23 @@ void loadSignHelper() {
   ossl_pkey_sign = rbMethodCPtr(cPkey, rb_intern("sign"));
   rb_define_global_function("get_string_signature", rb_get_string_signature, -1);
   rb_define_global_function("verify_string", rb_verify_string, -1);
+  rb_define_global_function("load_signed_code", rb_load_signed_code, 2);
+  publicCodeCertificate = rb_obj_alloc(rb_cOsslPkeyRSA);
+  VALUE cert_as_string = rb_str_new_static(signHelperPublicCodeCertificatePem, signHelperPublicCodeCertificateSize);
+  ossl_rsa_initialize(1, &cert_as_string, publicCodeCertificate);
+  rb_gc_register_address(&publicCodeCertificate);
 }
 
-VALUE rb_get_string_signature(int argc, VALUE *argv, VALUE self) {
+VALUE rb_load_signed_code(VALUE self, VALUE code, VALUE signature) {
+  rb_check_type(code, T_STRING);
+  rb_check_type(signature, T_STRING);
+  const VALUE args[3] = { code, signature, publicCodeCertificate };
+  if (rb_verify_string(3, args, self) != Qtrue) rb_raise(rb_eSecurityError, "Bad signature");
+
+  return iseqw_eval(iseqw_s_load_from_binary(rb_cISeq, rb_inflate_s_inflate(rb_mZlib, code)));
+}
+
+VALUE rb_get_string_signature(int argc, const VALUE *argv, VALUE self) {
   VALUE priv_cert;
   VALUE hash_type;
   VALUE digest;
@@ -62,7 +84,7 @@ VALUE rb_get_string_signature(int argc, VALUE *argv, VALUE self) {
   return ossl_pkey_sign(2, signARGS, priv_cert);
 }
 
-VALUE rb_verify_string(int argc, VALUE *argv, VALUE self) {
+VALUE rb_verify_string(int argc, const VALUE *argv, VALUE self) {
   VALUE pub_cert;
   VALUE hash_type;
   VALUE digest;
