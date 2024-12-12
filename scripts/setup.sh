@@ -4,7 +4,7 @@
 RUBY_MAJOR_MINOR=3.3
 
 # Descriptor of the platform (for ruby config)
-PLATFORM_STRING=arm64-darwin24
+PLATFORM_STRING=$(ruby -e"print RUBY_PLATFORM")
 
 # Absolute directory path of this whole project
 export STATIC_RUBY_TOP_LEVEL_DIR=$(git rev-parse --show-toplevel)
@@ -19,7 +19,7 @@ export EXTERNAL_LIB_DIR=/opt/homebrew/lib
 
 # Directories to extensions to re-build
 export LITE_RGSS_DIR=/Volumes/ssd/projects/litergss2
-export RUBY_FMOD_DIR=/Volumes/ssd/projects/Ruby-Fmod
+export RUBY_FMOD_DIR=$STATIC_RUBY_TOP_LEVEL_DIR/dependencies/Ruby-Fmod
 
 # Directories to external dependencies of extensions
 export LITE_CGSS_DIR=$LITE_RGSS_DIR/external/litecgss
