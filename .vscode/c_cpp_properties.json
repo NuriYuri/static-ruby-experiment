@@ -3,7 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
+                "${workspaceFolder}/src/**",
                 "/Volumes/ssd/tests/ruby-3.3.5/build/install/include/ruby-3.3.0",
                 "/Volumes/ssd/tests/ruby-3.3.5/build/install/include/ruby-3.3.0/arm64-darwin24",
                 "/Volumes/ssd/tests/ruby-3.3.5/"

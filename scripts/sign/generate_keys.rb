@@ -8,5 +8,7 @@ key = OpenSSL::PKey.generate_key("RSA", {
 })
 pub_key = OpenSSL::PKey.read(key.public_to_der)
 
-File.write('sign/priv.pem', key.to_pem)
-File.write('sign/pub.pem', pub_key.to_pem)
+path = File.dirname(__FILE__)
+
+File.write(File.join(path, 'priv.pem'), key.to_pem)
+File.write(File.join(path, 'pub.pem'), pub_key.to_pem)
