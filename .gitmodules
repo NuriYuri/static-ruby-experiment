@@ -1,0 +1,3 @@
+[submodule "dependencies/ruby"]
+	path = dependencies/ruby
+	url = git@github.com:ruby/ruby.git
