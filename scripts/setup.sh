@@ -6,10 +6,13 @@ RUBY_MAJOR_MINOR=3.3
 # Descriptor of the platform (for ruby config)
 PLATFORM_STRING=arm64-darwin24
 
+# Absolute directory path of this whole project
+export STATIC_RUBY_TOP_LEVEL_DIR=$(git rev-parse --show-toplevel)
+
 # Directories to dependencies needed to build extensions
 export SFML_DIR=/Volumes/ssd/tests/SFML-2.6.1
 export FMOD_DIR=/opt/homebrew
-export RUBY_DIR=/Volumes/ssd/tests/ruby-3.3.5
+export RUBY_DIR=$STATIC_RUBY_TOP_LEVEL_DIR/dependencies/ruby
 export RUBY_INSTALL_DIR=$RUBY_DIR/build/install
 export RUBY_INCLUDE_DIR=$RUBY_INSTALL_DIR/include/ruby-$RUBY_MAJOR_MINOR.0
 export EXTERNAL_LIB_DIR=/opt/homebrew/lib
@@ -24,9 +27,6 @@ export SKA_LOG_DIR=$LITE_CGSS_DIR/external/skalog
 
 # Expected std lib for g++
 export WITH_CPP_STD_LIB="-std=c++17"
-
-# Absolute directory path of this whole project
-export STATIC_RUBY_TOP_LEVEL_DIR=$(git rev-parse --show-toplevel)
 
 # Shortcut to add all ruby include dir for gcc
 export WITH_RUBY_INCLUDES="-I$RUBY_INCLUDE_DIR -I$RUBY_INCLUDE_DIR/$PLATFORM_STRING"
