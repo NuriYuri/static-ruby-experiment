@@ -31,8 +31,8 @@ Note: I need to optimize the configure command, it's missing few things.
 
 ## How to statically build SFML
 
-1. Go to SFML directory
-2. Run `cmake . -DBUILD_SHARED_LIBS=false -DSFML_OS_MACOSX=true`
+1. Go to SFML's build directory
+2. Run `cmake .. -DBUILD_SHARED_LIBS=false -DSFML_OS_MACOSX=true`
 3. Run `make sfml-system`
 3. Run `make sfml-window`
 3. Run `make sfml-graphics`

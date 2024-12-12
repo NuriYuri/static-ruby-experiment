@@ -4,3 +4,6 @@
 [submodule "dependencies/Ruby-Fmod"]
 	path = dependencies/Ruby-Fmod
 	url = git@github.com:NuriYuri/Ruby-Fmod.git
+[submodule "dependencies/SFML"]
+	path = dependencies/SFML
+	url = git@github.com:SFML/SFML.git
