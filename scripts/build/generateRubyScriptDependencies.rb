@@ -1,9 +1,12 @@
 #!/usr/bin/env ruby
 
 libraries_to_require = %w[socket digest digest/sha1 digest/sha2 digest/md5 openssl stringio io/nonblock io/wait date_core strscan json yaml matrix net/http csv]
-libraries_to_require << File.join(Dir.pwd, 'safen.rb')
+
 ruby_dir = ENV['RUBY_INSTALL_DIR']
 raise 'run "source setup.sh" before running this script' unless ruby_dir
+
+Dir.chdir(ENV['STATIC_RUBY_TOP_LEVEL_DIR'])
+libraries_to_require << File.join(Dir.pwd, 'src/safen.rb')
 
 require 'zlib'
 load_script = libraries_to_require.map { |v| "require \"#{v}\"" }.join(";")
@@ -73,7 +76,7 @@ out.each do |filename|
 end
 write_ruby_accumulator
 
-@public_code_certificate = File.binread('sign/pub.pem')
+@public_code_certificate = File.binread('scripts/sign/pub.pem')
 
 output = <<-EOF
 #ifndef MAIN_H
@@ -154,4 +157,4 @@ const Arguments copyAndExtendArguments(int argc, char** argv) {
 };
 #endif
 EOF
-File.write('main.h', output)
+File.write('src/main.h', output)

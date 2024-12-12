@@ -4,7 +4,7 @@
 // ./testRuby -e'load_extensions;cert=File.read("sign/pub.pem");p verify_string(File.binread("test.rb"), File.binread("signature"), cert)'
 // ./testRuby -e'load_extensions;cert=File.read("sign/priv.pem");bin=Zlib.deflate(RubyVM::InstructionSequence.compile(File.binread("test.rb"), "test.rb", "test.rb").to_binary);signature=get_string_signature(bin, cert);load_signed_code(bin, signature)'
 
-#include "../../iseq.h"
+#include "../../src/iseq.h"
 
 extern void* rbMethodCPtr(VALUE klass, ID method);
 

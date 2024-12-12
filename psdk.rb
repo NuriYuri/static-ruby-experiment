@@ -1,4 +1,4 @@
-# Run: ./testRuby -C/Volumes/ssd/projects/PSDK $(pwd)/test.rb
+# Run: ./staticRuby -C/Volumes/ssd/projects/PSDK $(pwd)/test.rb
 
 ENV['PSDK_BINARY_PATH'] = "/Volumes/ssd/projects/PokemonStudio/psdk-binaries/"
 

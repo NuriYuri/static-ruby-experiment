@@ -3,6 +3,8 @@
 ruby_dir = ENV['RUBY_DIR']
 raise 'run "source setup.sh" before running this script' unless ruby_dir
 
+Dir.chdir(ENV['STATIC_RUBY_TOP_LEVEL_DIR'])
+
 print "Ruby build sub directory: [build]"
 ruby_sub_directory = STDIN.gets.chomp.then { |v| v.empty? ? 'build' : v }
 

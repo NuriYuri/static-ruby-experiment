@@ -1,7 +1,9 @@
 *.o
 *.a
 *.dylib
-testRuby
+*.lib
+*.dll
+staticRuby
 main.h
 *.pem
 *.sig

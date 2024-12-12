@@ -25,10 +25,13 @@ export SKA_LOG_DIR=$LITE_CGSS_DIR/external/skalog
 # Expected std lib for g++
 export WITH_CPP_STD_LIB="-std=c++17"
 
+# Absolute directory path of this whole project
+export STATIC_RUBY_TOP_LEVEL_DIR=$(git rev-parse --show-toplevel)
+
 # Shortcut to add all ruby include dir for gcc
 export WITH_RUBY_INCLUDES="-I$RUBY_INCLUDE_DIR -I$RUBY_INCLUDE_DIR/$PLATFORM_STRING"
 # Shortcut to add all the ruby library
-export WITH_RUBY_LIBRARY="-Llibs -lruby.$RUBY_MAJOR_MINOR-static -lsocket -lzlib -lenc -ltrans -lmonitor -ldigest -lsha1 -lsha2 -lmd5 \
+export WITH_RUBY_LIBRARY="-L$STATIC_RUBY_TOP_LEVEL_DIR/libs -lruby.$RUBY_MAJOR_MINOR-static -lsocket -lzlib -lenc -ltrans -lmonitor -ldigest -lsha1 -lsha2 -lmd5 \
   -lopenssl $EXTERNAL_LIB_DIR/libcrypto.a $EXTERNAL_LIB_DIR/libssl.a \
   -lstringio -lnonblock -lwait -ldate_core -lstrscan -lparser -lgenerator \
   -lpsych $EXTERNAL_LIB_DIR/libyaml.a"
@@ -46,3 +49,4 @@ export WITH_LITERGSS_LIBRARY="-L$LITE_CGSS_DIR/lib -L$SFML_DIR/lib -lLiteRGSS -l
   -framework Foundation -framework AppKit -framework IOKit -framework Carbon -framework OpenGL -framework CoreGraphics -framework CoreServices \
   -lz -lbz2 \
 "
+
