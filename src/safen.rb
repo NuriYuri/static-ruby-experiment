@@ -369,7 +369,7 @@ module Process
     undef waitall
     undef waitpid
     undef waitpid2
-    undef warmup
+    # undef warmup
   end
 end
 
@@ -528,7 +528,7 @@ module Kernel
   # undef throw
   undef trace_var
   undef trap
-  undef untrace_var
+  undef untrace_var unless $DEBUG
   # undef warn
   # undef yield_self
 end
