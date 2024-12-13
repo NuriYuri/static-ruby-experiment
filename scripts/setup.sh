@@ -18,7 +18,7 @@ export RUBY_INCLUDE_DIR=$RUBY_INSTALL_DIR/include/ruby-$RUBY_MAJOR_MINOR.0
 export EXTERNAL_LIB_DIR=/opt/homebrew/lib
 
 # Directories to extensions to re-build
-export LITE_RGSS_DIR=/Volumes/ssd/projects/litergss2
+export LITE_RGSS_DIR=$STATIC_RUBY_TOP_LEVEL_DIR/dependencies/litergss2
 export RUBY_FMOD_DIR=$STATIC_RUBY_TOP_LEVEL_DIR/dependencies/Ruby-Fmod
 
 # Directories to external dependencies of extensions

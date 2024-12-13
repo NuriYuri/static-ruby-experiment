@@ -7,3 +7,6 @@
 [submodule "dependencies/SFML"]
 	path = dependencies/SFML
 	url = git@github.com:SFML/SFML.git
+[submodule "dependencies/litergss2"]
+	path = dependencies/litergss2
+	url = git@gitlab.com:pokemonsdk/litergss2.git
