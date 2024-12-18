@@ -32,9 +32,10 @@ export WITH_CPP_STD_LIB="-std=c++17"
 export WITH_RUBY_INCLUDES="-I$RUBY_INCLUDE_DIR -I$RUBY_INCLUDE_DIR/$PLATFORM_STRING"
 # Shortcut to add all the ruby library
 export WITH_RUBY_LIBRARY="-L$STATIC_RUBY_TOP_LEVEL_DIR/libs -lruby.$RUBY_MAJOR_MINOR-static -lsocket -lzlib -lenc -ltrans -lmonitor -ldigest -lsha1 -lsha2 -lmd5 \
-  -lopenssl $EXTERNAL_LIB_DIR/libcrypto.a $EXTERNAL_LIB_DIR/libssl.a \
+  -lopenssl $STATIC_RUBY_TOP_LEVEL_DIR/dependencies/openssl/libcrypto.a $STATIC_RUBY_TOP_LEVEL_DIR/dependencies/openssl/libssl.a \
   -lstringio -lnonblock -lwait -ldate_core -lstrscan -lparser -lgenerator \
-  -lpsych $EXTERNAL_LIB_DIR/libyaml.a"
+  -lpsych $STATIC_RUBY_TOP_LEVEL_DIR/dependencies/libyaml/src/.libs/libyaml.a \
+  $STATIC_RUBY_TOP_LEVEL_DIR/dependencies/zlib-1.3.1/libz.a"
 
 # Shortcut to add all the FMOD include dir for gcc
 export WITH_FMOD_INCLUDES="-I$FMOD_DIR/include"

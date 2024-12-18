@@ -22,7 +22,7 @@ This project has a little structure that make it possible.
 
 1. I donwloaded and extracted Ruby
 2. I created a build folder inside
-3. I ran `LDFLAGS="$LDFLAGS -L/opt/homebrew/lib" ../configure --disable-dln --disable-install-doc --disable-install-rdoc --disable-install-capi --with-static-linked-ext --prefix=$(pwd)/install`
+3. I ran `LDFLAGS="$LDFLAGS -L/opt/homebrew/lib" INCFLAGS="$INCFLAGS -I$STATIC_RUBY_TOP_LEVEL_DIR/dependencies/libyaml/include" ../configure --disable-dln --disable-install-doc --disable-install-rdoc --disable-install-capi --with-static-linked-ext --prefix=$(pwd)/install`
 4. I ran `make`
 5. I ran `make install`
 6. I ran `bringRubyStaticLibraries.rb` from this project's folder
