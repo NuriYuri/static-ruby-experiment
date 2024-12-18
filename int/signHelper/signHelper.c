@@ -1,8 +1,8 @@
 #include "ruby.h"
 // Examples:
-// ./testRuby -e'load_extensions;cert=File.read("sign/priv.pem");File.binwrite("signature", get_string_signature(File.binread("test.rb"), cert))'
-// ./testRuby -e'load_extensions;cert=File.read("sign/pub.pem");p verify_string(File.binread("test.rb"), File.binread("signature"), cert)'
-// ./testRuby -e'load_extensions;cert=File.read("sign/priv.pem");bin=Zlib.deflate(RubyVM::InstructionSequence.compile(File.binread("test.rb"), "test.rb", "test.rb").to_binary);signature=get_string_signature(bin, cert);load_signed_code(bin, signature)'
+// ./staticRuby -e'load_extensions;cert=File.read("scripts/sign/priv.pem");File.binwrite("signature", get_string_signature(File.binread("psdk.rb"), cert))'
+// ./staticRuby -e'load_extensions;cert=File.read("scripts/sign/pub.pem");p verify_string(File.binread("psdk.rb"), File.binread("signature"), cert)'
+// ./staticRuby -e'load_extensions;cert=File.read("scripts/sign/priv.pem");bin=Zlib.deflate(RubyVM::InstructionSequence.compile(File.binread("psdk.rb"), "psdk.rb", "psdk.rb").to_binary);signature=get_string_signature(bin, cert);load_signed_code(bin, signature)'
 
 #include "../../src/iseq.h"
 
