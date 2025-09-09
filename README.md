@@ -23,6 +23,16 @@ This project has a little structure that make it possible.
 1. I donwloaded and extracted Ruby
 2. I created a build folder inside
 3. I ran `LDFLAGS="$LDFLAGS -L/opt/homebrew/lib" INCFLAGS="$INCFLAGS -I$STATIC_RUBY_TOP_LEVEL_DIR/dependencies/libyaml/include" ../configure --disable-dln --disable-install-doc --disable-install-rdoc --disable-install-capi --with-static-linked-ext --prefix=$(pwd)/install`
+    1. **Note For Windows** Windows:
+    2. Follow https://docs.ruby-lang.org/en/master/windows_md.html
+    3. For the `sh ../src/configure -C --disable-install-doc` use `sh ../src/configure -C --disable-install-doc --disable-dln -disable-install-rdoc --disable-install-capi --with-static-linked-ext --prefix=C:/Projet/ruby/build/install`
+    4. To fix openSSL build you need to add `#define RUBY_EXPORT 1` in its extconfg.h file.
+    5. To fix encoding issues: `pacman -S mingw-w64-ucrt-x86_64-oniguruma` then edit the Makefile.in fron /src/enc to have
+        - `LIBRUBYARG_SHARED = @LIBRUBYARG_SHARED@ -lonig`
+        - `LIBRUBYARG_STATIC = $(LIBRUBYARG_SHARED) -lonig`
+        - `CFLAGS = $(CCDLFLAGS) @CFLAGS@ @ARCH_FLAG@ -DRUBY_EXPORT=1`
+        - `LDFLAGS = @LDFLAGS@ -LC:/Ruby33-x64/msys64/ucrt64/lib`
+        - `LDSHARED = @LDSHARED@ -LC:/Ruby33-x64/msys64/ucrt64/lib`
 4. I ran `make`
 5. I ran `make install`
 6. I ran `bringRubyStaticLibraries.rb` from this project's folder

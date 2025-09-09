@@ -13,3 +13,6 @@
 [submodule "dependencies/openssl"]
 	path = dependencies/openssl
 	url = git@github.com:openssl/openssl.git
+[submodule "dependencies/libyaml"]
+	path = dependencies/libyaml
+	url = git@github.com:yaml/libyaml.git
