@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-libraries_to_require = %w[socket digest digest/sha1 digest/sha2 digest/md5 openssl stringio io/nonblock io/wait date_core strscan json yaml matrix net/http csv]
+libraries_to_require = %w[digest digest/sha1 digest/sha2 digest/md5 socket openssl stringio io/nonblock io/wait date_core strscan json yaml matrix net/http csv]
 
 ruby_dir = ENV['RUBY_INSTALL_DIR']
 raise 'run "source setup.sh" before running this script' unless ruby_dir
@@ -21,8 +21,9 @@ lp.sort! { |p| -p.bytesize }
 @ruby_exports = ''
 @ruby_loader = ''
 @iseq_load = "loadScript(str);"
+compile_instruction = "RubyVM::InstructionSequence.compile_parsey(data, path, path, 1, {inline_const_cache: true,peephole_optimization: true,tailcall_optimization: false,specialized_instruction: true,operands_unification: true,instructions_unification: true,debug_level: 0}).to_binary"
 @get_iseq_binary = proc do |path, data|
-  next IO.popen("#{ruby_dir}/bin/ruby -e'path=STDIN.gets.chomp;data=STDIN.read;STDOUT.write(RubyVM::InstructionSequence.compile(data, path, path, 1, {inline_const_cache: true,peephole_optimization: true,tailcall_optimization: false,specialized_instruction: true,operands_unification: true,instructions_unification: true,debug_level: 0}).to_binary)'", 'r+') do |f|
+  next IO.popen("#{ruby_dir}/bin/ruby -e'path=STDIN.gets.chomp;data=STDIN.read;bin=#{compile_instruction};STDOUT.write(bin.each_byte.to_a.to_s[1...-1])'", 'rb+') do |f|
     f.puts(path)
     f.write(data)
     f.flush
@@ -31,13 +32,12 @@ lp.sort! { |p| -p.bytesize }
   end
 end
 
-INIT_BAN_LIST = %w[Init_enc_trans_utf_16_32();]
+INIT_BAN_LIST = %w[Init_enc_trans_utf_16_32(); Init_enc_utf_16le();]
 
 def write_library(filename)
   init_name = "Init_#{filename.sub('.so', '').gsub('/', '_')}();"
-  return if INIT_BAN_LIST.include?(init_name)
+  return :banned if INIT_BAN_LIST.include?(init_name)
 
-  init_name.sub!('Init_enc_', 'Init_')
   puts "#{filename} -> #{init_name}"
   @ruby_exports << "void #{init_name}\n"
   @ruby_loader << "#{init_name}\n"
@@ -50,7 +50,7 @@ def write_ruby_accumulator
   fixed_data << "\n$LOADED_FEATURES.concat(['#{@ruby_features.map { |v| "/internal/#{v}" }.join("','")}'])\n"
   path = "#{@ruby_index}.rb"
   bin = @get_iseq_binary.call(path, fixed_data)
-  compressed = Zlib::Deflate.deflate(bin)
+  compressed = Zlib::Deflate.deflate(bin.split(',').map(&:to_i).map(&:chr).join)
   size = compressed.bytesize
   puts "#{@ruby_features.join(",")} = #{@ruby_accumulator.bytesize} -> #{bin.bytesize} -> #{size}"
   @ruby_loader << "const unsigned char str#{@ruby_index}[#{size}] = {#{compressed.each_byte.to_a.join(',')}};\nstr = rb_str_new_static((const char*)str#{@ruby_index}, #{size});\n#{@iseq_load}\n"
@@ -62,7 +62,7 @@ end
 out.each do |filename|
   if filename.end_with?('.so')
     write_ruby_accumulator
-    write_library(filename)
+    next if write_library(filename) == :banned
     @ruby_features << filename
     next
   end
@@ -75,7 +75,7 @@ out.each do |filename|
   if short_path == 'net/http.rb'
     @ruby_accumulator.prepend("module Net;class Protocol;end;end\n", data, "\n")
   else
-    @ruby_accumulator << data
+    @ruby_accumulator << data # unless short_path.include?('csv') # <= Uncomment in case of Ractor issue
     @ruby_accumulator << "\n"
   end
 end
@@ -96,6 +96,7 @@ extern "C" {
   void Init_utf_16be();
   void Init_utf_16le();
   void Init_windows_1252();
+  void Init_trans_utf_16_32();
   void Init_zlib();
   void loadSignHelper();
   #{@ruby_exports}
@@ -125,6 +126,7 @@ static inline void load_ruby_extension() {
   Init_utf_16be();
   Init_utf_16le();
   Init_windows_1252();
+  Init_trans_utf_16_32();
   #{@ruby_loader}
 }
 

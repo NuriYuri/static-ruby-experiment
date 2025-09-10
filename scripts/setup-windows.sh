@@ -37,7 +37,8 @@ export WITH_RUBY_LIBRARY="-L$STATIC_RUBY_TOP_LEVEL_DIR/libs -lx64-ucrt-ruby340-s
   $EXTERNAL_LIB_DIR/libwinpthread.a $EXTERNAL_LIB_DIR/libssl.a $EXTERNAL_LIB_DIR/libcrypto.a -lcrypt32 \
   -lstringio -lnonblock -lwait -ldate_core -lstrscan -lparser -lgenerator \
   -lpsych $EXTERNAL_LIB_DIR/libz.a $EXTERNAL_LIB_DIR/libyaml.a \
-  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi -lbcrypt"
+  -lshell32 -lws2_32 -liphlpapi -limagehlp -lshlwapi -lbcrypt \
+  -static-libgcc -static-libstdc++"
 
 # Shortcut to add all the FMOD include dir for gcc
 export WITH_FMOD_INCLUDES="-I$FMOD_DIR/include"
@@ -52,7 +53,7 @@ export WITH_LITERGSS_LIBRARY="-L$LITE_CGSS_DIR/lib -lLiteRGSS -lLiteCGSS_engine 
   $SFML_DIR/build/lib/libsfml-main.a \
   $EXTERNAL_LIB_DIR/libfreetype.a $EXTERNAL_LIB_DIR/libharfbuzz.a $EXTERNAL_LIB_DIR/libgraphite2.a -lgdi32 -lusp10 $EXTERNAL_LIB_DIR/libpng16.a \
   $EXTERNAL_LIB_DIR/libbrotlidec.a $EXTERNAL_LIB_DIR/libbrotlicommon.a \
-  -lz -lbz2 -lwinmm -lrpcrt4 -ldwrite -lopengl32 \
+  -lz $EXTERNAL_LIB_DIR/libbz2.a -lwinmm -lrpcrt4 -ldwrite -lopengl32 \
 "
 
 export MACOS_EXTRA_BUILD_ARGS=""
