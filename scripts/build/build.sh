@@ -7,8 +7,7 @@ g++ main.cpp \
   $WITH_RUBY_INCLUDES $WITH_RUBY_LIBRARY \
   $WITH_FMOD_INCLUDES $WITH_FMOD_LIBRARY \
   $WITH_LITERGSS_INCLUDES $WITH_LITERGSS_LIBRARY \
-  -framework CoreFoundation \
-  -all_load \
+  $MACOS_EXTRA_BUILD_ARGS \
   -Wl,-rpath,'@executable_path' \
   -lRbMethodCPtr \
   -lSignHelper \

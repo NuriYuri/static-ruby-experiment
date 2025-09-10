@@ -31,8 +31,13 @@ lp.sort! { |p| -p.bytesize }
   end
 end
 
+INIT_BAN_LIST = %w[Init_enc_trans_utf_16_32();]
+
 def write_library(filename)
   init_name = "Init_#{filename.sub('.so', '').gsub('/', '_')}();"
+  return if INIT_BAN_LIST.include?(init_name)
+
+  init_name.sub!('Init_enc_', 'Init_')
   puts "#{filename} -> #{init_name}"
   @ruby_exports << "void #{init_name}\n"
   @ruby_loader << "#{init_name}\n"

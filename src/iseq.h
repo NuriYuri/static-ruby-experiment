@@ -16,7 +16,7 @@ static ONE_ARG iseqw_s_load_from_binary;
 static ONE_ARG rb_inflate_s_inflate;
 
 STATIC_RUBY_EXTERN VALUE rb_cISeq;
-VALUE rb_mZlib;
+static VALUE rb_mZlib;
 
 // Note: must be called after Init_zlib
 void loadStaticRubyISEQ() {
