@@ -17,7 +17,11 @@
  * It is still under construction (and even not well-maintained).
  * If you are familiar with Ruby's source code, please improve the doc.
  */
-#undef RUBY_EXPORT
+#ifdef _WIN32
+  #define RUBY_EXPORT 1
+#else
+  #undef RUBY_EXPORT
+#endif
 #include "ruby.h"
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
