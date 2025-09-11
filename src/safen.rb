@@ -377,7 +377,7 @@ module ObjectSpace
   class << self
     undef count_objects
     undef define_finalizer
-    undef each_object
+    # undef each_object
     undef garbage_collect
     undef undefine_finalizer
   end
