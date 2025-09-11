@@ -53,7 +53,7 @@ export WITH_LITERGSS_LIBRARY="-L$LITE_CGSS_DIR/lib -lLiteRGSS -lLiteCGSS_engine 
   $SFML_DIR/build/lib/libsfml-main.a \
   $EXTERNAL_LIB_DIR/libfreetype.a $EXTERNAL_LIB_DIR/libharfbuzz.a $EXTERNAL_LIB_DIR/libgraphite2.a -lgdi32 -lusp10 $EXTERNAL_LIB_DIR/libpng16.a \
   $EXTERNAL_LIB_DIR/libbrotlidec.a $EXTERNAL_LIB_DIR/libbrotlicommon.a \
-  -lz $EXTERNAL_LIB_DIR/libbz2.a -lwinmm -lrpcrt4 -ldwrite -lopengl32 \
+  $EXTERNAL_LIB_DIR/libbz2.a -lwinmm -lrpcrt4 -ldwrite -lopengl32 \
 "
 
 export MACOS_EXTRA_BUILD_ARGS=""
