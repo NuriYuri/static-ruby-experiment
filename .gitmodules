@@ -16,3 +16,6 @@
 [submodule "dependencies/libyaml"]
 	path = dependencies/libyaml
 	url = git@github.com:yaml/libyaml.git
+[submodule "dependencies/zlib"]
+	path = dependencies/zlib
+	url = git@github.com:madler/zlib.git

@@ -35,7 +35,7 @@ export WITH_RUBY_LIBRARY="-L$STATIC_RUBY_TOP_LEVEL_DIR/libs -lruby.$RUBY_MAJOR_M
   -lopenssl $STATIC_RUBY_TOP_LEVEL_DIR/dependencies/openssl/libcrypto.a $STATIC_RUBY_TOP_LEVEL_DIR/dependencies/openssl/libssl.a \
   -lstringio -lnonblock -lwait -ldate_core -lstrscan -lparser -lgenerator \
   -lpsych $STATIC_RUBY_TOP_LEVEL_DIR/dependencies/libyaml/src/.libs/libyaml.a \
-  $STATIC_RUBY_TOP_LEVEL_DIR/dependencies/zlib-1.3.1/libz.a"
+  $STATIC_RUBY_TOP_LEVEL_DIR/dependencies/zlib/libz.a"
 
 # Shortcut to add all the FMOD include dir for gcc
 export WITH_FMOD_INCLUDES="-I$FMOD_DIR/include"
@@ -48,7 +48,7 @@ export WITH_LITERGSS_INCLUDES="-I$SFML_DIR/include -I$LITE_RGSS_DIR/ext/LiteRGSS
 export WITH_LITERGSS_LIBRARY="-L$LITE_CGSS_DIR/lib -L$SFML_DIR/build/lib -lLiteRGSS -lLiteCGSS_engine -lskalog -lsfml-graphics-s -lsfml-system-s -lsfml-window-s \
   $EXTERNAL_LIB_DIR/libfreetype.a $EXTERNAL_LIB_DIR/libpng16.a \
   -framework Foundation -framework AppKit -framework IOKit -framework Carbon -framework OpenGL -framework CoreGraphics -framework CoreServices \
-  -lz -lbz2 \
+  -lbz2 \
 "
 
 export MACOS_EXTRA_BUILD_ARGS="-framework CoreFoundation -all_load"
