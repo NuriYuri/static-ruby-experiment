@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-libraries_to_require = %w[digest digest/sha1 digest/sha2 digest/md5 socket openssl stringio io/nonblock io/wait date_core strscan json yaml matrix net/http csv]
+libraries_to_require = %w[rbconfig digest digest/sha1 digest/sha2 digest/md5 socket openssl stringio io/nonblock io/wait date_core strscan json yaml matrix net/http csv]
 
 ruby_dir = ENV['RUBY_INSTALL_DIR']
 raise 'run "source setup.sh" before running this script' unless ruby_dir
@@ -10,7 +10,7 @@ libraries_to_require << File.join(Dir.pwd, 'src/safen.rb')
 
 require 'zlib'
 load_script = libraries_to_require.map { |v| "require \"#{v}\"" }.join(";")
-out = IO.popen("#{ruby_dir}/bin/ruby -e'lf=$LOADED_FEATURES.dup;#{load_script};puts $LOADED_FEATURES-lf'") { |v| break(v.readlines(chomp: true)) }
+out = IO.popen("#{ruby_dir}/bin/ruby -e'lf=$LOADED_FEATURES.dup;#{load_script};puts $LOADED_FEATURES-lf.reject{|c| c.include?(\"/rbconfig.rb\")}'") { |v| break(v.readlines(chomp: true)) }
 out.reject! { |v| v == 'zlib.so' }
 lp = IO.popen("#{ruby_dir}/bin/ruby -e'puts $LOAD_PATH'") { |v| break(v.readlines(chomp: true)) }
 lp.sort! { |p| -p.bytesize }
