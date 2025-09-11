@@ -104,7 +104,6 @@ extern "C" {
   void Init_zlib();
   void loadSignHelper();
   #{@ruby_exports}
-  void Init_GC();
 }
 
 extern "C" {
@@ -133,7 +132,6 @@ static inline void load_ruby_extension() {
   Init_windows_1252();
   Init_trans_utf_16_32();
   #{@ruby_loader}
-  Init_GC();
 }
 
 VALUE loadAllExtensions(VALUE self) {
