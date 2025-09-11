@@ -68,6 +68,9 @@ out.each do |filename|
   end
 
   data = File.read(filename)
+  has_ractor_comment = data.include?('# shareable_constant_value:')
+  write_ruby_accumulator if (has_ractor_comment)
+
   real_path = filename.sub(ruby_dir, 'ruby')
   load_path = lp.find { |p| filename.start_with?(p) }
   short_path = load_path ? filename.sub(load_path, '')[1..] : real_path
@@ -75,9 +78,10 @@ out.each do |filename|
   if short_path == 'net/http.rb'
     @ruby_accumulator.prepend("module Net;class Protocol;end;end\n", data, "\n")
   else
-    @ruby_accumulator << data # unless short_path.include?('csv') # <= Uncomment in case of Ractor issue
+    @ruby_accumulator << data
     @ruby_accumulator << "\n"
   end
+  write_ruby_accumulator if (has_ractor_comment)
 end
 write_ruby_accumulator
 
@@ -100,6 +104,7 @@ extern "C" {
   void Init_zlib();
   void loadSignHelper();
   #{@ruby_exports}
+  void Init_GC();
 }
 
 extern "C" {
@@ -128,6 +133,7 @@ static inline void load_ruby_extension() {
   Init_windows_1252();
   Init_trans_utf_16_32();
   #{@ruby_loader}
+  Init_GC();
 }
 
 VALUE loadAllExtensions(VALUE self) {
