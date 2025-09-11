@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ruby version
-RUBY_MAJOR_MINOR=3.3
+RUBY_MAJOR_MINOR=3.4
 
 # Descriptor of the platform (for ruby config)
 PLATFORM_STRING=$(ruby -e"print RUBY_PLATFORM")

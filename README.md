@@ -72,7 +72,7 @@ Note: I need to optimize the configure command, it's missing few things.
     - `export INCFLAGS="$INCFLAGS -I'$LITE_CGSS_DIR/src/src' -I'$SFML_DIR/include'"`
     - `export LDFLAGS="$LDFLAGS -L'$LITE_CGSS_DIR/lib' -L'$SFML_DIR/build/lib'"`
     - Note: You need to copy all the .a files from SFML (including main, network and audio) to the msys lib folder.
-    - `cmake -G "MSYS Makefiles" -DBUILD_SHARED_LIBS=False -DCGSS_NO_LOGS=True -DLITECGSS_NO_TEST=True -DCMAKE_BUILD_TYPE=Release -DSFML_STATIC_LIBRARIES=True .`
+    - `cmake -G "MSYS Makefiles" -DBUILD_SHARED_LIBS=False -DCGSS_NO_LOGS=True -DLITECGSS_NO_TEST=True -DCMAKE_BUILD_TYPE=Release -DSFML_STATIC_LIBRARIES=True -DSFML_DIR=$SFML_DIR/build .`
     - `cmake --build .`
 3. Make sure you did copy the necessary library files to `libs`
 4. Edit `setup.sh` to fix the paths based on your own setup
