@@ -95,6 +95,7 @@ binread = IO.singleton_method(:binread).unbind
 read = IO.singleton_method(:read).unbind
 readlines = IO.singleton_method(:readlines).unbind
 rename = File.singleton_method(:rename).unbind
+delete = File.singleton_method(:delete).unbind
 size = File.singleton_method(:size).unbind
 class File
   class << self
@@ -209,7 +210,11 @@ end
 File.define_singleton_method(:rename) do |f, args|
    .bind_call(Kernel, f)
    .bind_call(Kernel, args)
-  rename.bind_call(File, args)
+  rename.bind_call(File, f, args)
+end
+File.define_singleton_method(:delete) do |f|
+   .bind_call(Kernel, f)
+  delete.bind_call(File, f)
 end
 File.define_singleton_method(:size) do |f|
    .bind_call(Kernel, f)
