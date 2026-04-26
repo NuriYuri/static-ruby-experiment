@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ruby version
-RUBY_MAJOR_MINOR=3.4
+RUBY_MAJOR_MINOR=4.0
 
 # Descriptor of the platform (for ruby config)
 PLATFORM_STRING=$(ruby -e"print RUBY_PLATFORM")
@@ -11,7 +11,28 @@ export STATIC_RUBY_TOP_LEVEL_DIR=$(git rev-parse --show-toplevel)
 
 # Directories to dependencies needed to build extensions
 export SFML_DIR=$STATIC_RUBY_TOP_LEVEL_DIR/dependencies/SFML
-export FMOD_DIR=/opt/homebrew
+
+# -------------------------
+# FMOD auto-detection
+# -------------------------
+
+FMOD_LIB_PATH=$(find /usr /opt /Library -name "libfmod*" 2>/dev/null | head -n 1)
+FMOD_FRAMEWORK_PATH=$(find /usr /opt -name "fmod.framework" 2>/dev/null | head -n 1)
+
+# Resolve FMOD_DIR based on what we find
+if [ -n "$FMOD_LIB_PATH" ]; then
+    # Strip /lib/libfmod*.dylib → get base prefix
+    FMOD_DIR=$(dirname "$(dirname "$FMOD_LIB_PATH")")
+elif [ -n "$FMOD_FRAMEWORK_PATH" ]; then
+    # Framework case: .../fmod.framework
+    FMOD_DIR=$(dirname "$FMOD_FRAMEWORK_PATH")
+else
+    echo "❌ FMOD not found on system"
+    echo "   Searched: /usr /opt"
+    exit 1
+fi
+export FMOD_DIR
+
 export RUBY_DIR=$STATIC_RUBY_TOP_LEVEL_DIR/dependencies/ruby
 export RUBY_INSTALL_DIR=$RUBY_DIR/build/install
 export RUBY_INCLUDE_DIR=$RUBY_INSTALL_DIR/include/ruby-$RUBY_MAJOR_MINOR.0
