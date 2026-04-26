@@ -1,4 +1,6 @@
 #define VM_ASSERT(arg) 0;
+#include "internal/serial.h"
+#include "internal/box.h"
 #include "method.h"
 
 void* rbMethodCPtr(VALUE klass, ID method) {
