@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-libraries_to_require = %w[rbconfig digest digest/sha1 digest/sha2 digest/md5 socket openssl stringio io/nonblock io/wait date_core strscan json yaml matrix net/http csv]
+libraries_to_require = %w[rbconfig digest digest/sha1 digest/sha2 digest/md5 socket openssl stringio io/nonblock io/wait date_core strscan json yaml matrix net/http csv base64]
 
 ruby_dir = ENV['RUBY_INSTALL_DIR']
 raise 'run "source setup.sh" before running this script' unless ruby_dir
